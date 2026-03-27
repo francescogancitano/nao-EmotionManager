@@ -13,13 +13,14 @@ import sys
 import time
 import re
 import io
-import colorlog
-import logging
+
+from log import logger 
 
 
 DEFAULT_COLOR_FADE_TIME = 0.2           #questa costante definisce quanto tempo ci impiega nao a cambiare colore degli occhi
 DEFAULT_MOTION_SPEED = 0.2        #questa costante definisce la velocità in cui nao va a muovere la testa da una posizione a un altra
 
+"""
 handler = colorlog.StreamHandler()
 handler.setFormatter(colorlog.ColoredFormatter(
     '%(log_color)s[%(lineno)d]\t[%(levelname)s] [%(funcName)s]%(reset)s %(message)s',
@@ -35,7 +36,7 @@ handler.setFormatter(colorlog.ColoredFormatter(
 logger = colorlog.getLogger(__name__)
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
-
+"""
 class EmotionManager:
 
     def __init__(self, ip_address, port=9559):
@@ -135,14 +136,37 @@ class EmotionManager:
         le chiavi sono scritte come ho detti sia in italiano sia in inglese
         """
         _MOOD_DEFAULTS = {            #mv testa       mood per log          colore degli occhi          velocità voce      tono di voce
-            ("felice", "happy"):     {"head": -0.4,  "log": "FELICE",      "coloreOcchiHEX": 0x00FF00, "voiceSpeed": 120, "voiceTone": 1.2},
-            ("triste", "sad"):       {"head": 0.4,   "log":  "TRISTE",     "coloreOcchiHEX": 0x0000FF, "voiceSpeed": 75,  "voiceTone": 0.8},
-            ("arrabbiato", "angry"): {"head": 0.0,   "log":  "ARRABBIATO", "coloreOcchiHEX": 0xFF0000, "voiceSpeed": 110, "voiceTone": 0.9},
-            ("neutro", "neutral"):   {"head": 0.0,   "log":  "NEUTRI",     "coloreOcchiHEX": 0xFFFFFF, "voiceSpeed": 100, "voiceTone": 1.0},
+            ("felice", "happy"):       {"head": -0.4,  "log": "FELICE",      "coloreOcchiHEX": 0xFFFF00, "voiceSpeed": 120, "voiceTone": 1.2},
+            ("triste", "sad"):         {"head": 0.4,   "log":  "TRISTE",     "coloreOcchiHEX": 0x0000FF, "voiceSpeed": 75,  "voiceTone": 0.8},
+            ("arrabbiato", "angry"):   {"head": 0.0,   "log":  "ARRABBIATO", "coloreOcchiHEX": 0xFF0000, "voiceSpeed": 110, "voiceTone": 0.9},
+            ("neutro", "neutral"):     {"head": 0.0,   "log":  "NEUTRI",     "coloreOcchiHEX": 0xFFFFFF, "voiceSpeed": 100, "voiceTone": 1.0},
+            #EMOZIONI NUOVE
+            ("sorpresa", "surprised"): {"head": 0.0,   "log":  "SORPRESA",   "coloreOcchiHEX": 0xFFA500, "voiceSpeed": 100, "voiceTone": 1.1},
+            ("paura", "afraid"):       {"head": -0.2,  "log":  "PAURA",      "coloreOcchiHEX": 0xFF00FF, "voiceSpeed": 90,  "voiceTone": 0.7},
+            ("disgusto", "disgusted"): {"head": 0.2,   "log":  "DISGUSTO",   "coloreOcchiHEX": 0x00FF00, "voiceSpeed": 85,  "voiceTone": 0.9},
+            ("noia", "bored"):         {"head": 0.1,   "log":  "NOIA",       "coloreOcchiHEX": 0x808080, "voiceSpeed": 70,  "voiceTone": 0.95},
+
+            
         }
+        """
+            gioia giallo
+            triste blu
+            rabbia rosso
+            sorpresa arancione
+            paura viola
+            disgusto verde 
+            noia grigio
+            neutro bianco
+            
+            TODO:funzione apparte per sorpresa per lampeggiare occhio
+            
+            TODO:sbuffo per noia registrato
+            
+            TODO:sorpresa un qualcosa 
+        """
 
 
-        """qui i dati vengono elaborati in modo puliti per essere interpretati da python"""
+        """qui i dati vengono elaborati in modo pulito per essere interpretati da python"""
         MOOD_CONFIG = {}
         for keys, config in _MOOD_DEFAULTS.items():
             for key in keys:

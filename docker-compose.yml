@@ -1,0 +1,11 @@
+version: '3'
+services:
+  nao-manager:
+    build: .
+    container_name: nao_emotion_manager
+#    volumes:
+#      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Se il robot è nella tua stessa rete, usa 'network_mode: host'
+    network_mode: "host"
