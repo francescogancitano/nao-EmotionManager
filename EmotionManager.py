@@ -10,9 +10,9 @@ from utils import logger, determine_file_type, MOOD_CONFIG, NEUTRAL_CONFIG
 
 class EmotionManager(object):
 
-    def __init__(self, ip_address, port=9559):
+    def __init__(self):
         """Inizializza EmotionManager e il robot Nao."""
-        self.nao = Nao(ip_address, port)
+        self.nao = Nao()
 
 
     def set_mood(self, mood_name):
@@ -79,6 +79,6 @@ class EmotionManager(object):
 
 
 if __name__ == "__main__":
-    manager = EmotionManager("192.168.178.36")
+    manager = EmotionManager()
 
     manager.perform("*set_sad Ciao, sono triste. *set_happy Ma ora sono felice! *set_angry E adesso arrabbiato! *set_neutral Torno neutro. *set_noia sono annoiato", mood=None)

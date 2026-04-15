@@ -16,6 +16,7 @@ _MOOD_DEFAULTS = {                  #mv testa       mood per log          colore
     ("paura",      "afraid"):      {"head": -0.2,  "log":  "PAURA",      "coloreOcchiHEX": 0xFF00FF, "voiceSpeed": 90,  "voiceTone": 0.7},
     ("disgusto",   "disgusted"):   {"head":  0.2,  "log":  "DISGUSTO",   "coloreOcchiHEX": 0x00FF00, "voiceSpeed": 85,  "voiceTone": 0.9},
     ("noia",       "bored"):       {"head":  0.1,  "log":  "NOIA",       "coloreOcchiHEX": 0x808080, "voiceSpeed": 70,  "voiceTone": 0.95},
+    ("determinato", "determined"): {"head": -0.4,  "log":  "DETERMINATO", "coloreOcchiHEX": 0x00FFFF, "voiceSpeed": 110, "voiceTone": 1.1},
 }
 
  

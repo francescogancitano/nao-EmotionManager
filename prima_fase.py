@@ -1,246 +1,131 @@
 # -*- coding: utf-8 -*-
-import time
-import qi
 from EmotionManager import EmotionManager
-from utils import logger
+from utils_positions import head, arms_both, right_arm_magic_pose
+import time
 
-# Configurazione Robot
-IP_ADDRESS = "192.168.178.36"
+# Inizializzazione EmotionManager (default localhost)
+em = EmotionManager()
+nao = em.nao
 
-# Inizializzazione EmotionManager e servizi
-try:
-    nao_manager = EmotionManager(IP_ADDRESS)
-    robot = nao_manager.nao
-    session = robot.session
-    
-    # Servizi Nao
-    motion = robot.motion
-    leds = robot.leds
-    posture = robot.posture
-except Exception as e:
-    logger.error("Errore durante l'inizializzazione: {}".format(e))
-    exit(1)
-
-
-def functionSetup():
-    """Prepara il robot per la performance."""
+def prima_fase():
     try:
-        if motion:
-            motion.wakeUp()
-            motion.setStiffnesses("Body", 1.0)
+        nao.motion.wakeUp()
+        nao.posture.goToPosture("StandInit", 0.5)
+        nao.motion.setStiffnesses("Body", 1.0)
+
+        try:
+            nao.leds.fadeRGB("FaceLeds", 0x000000, 0.5)
+            nao.leds.fadeRGB("ChestLeds", 0x000000, 0.5)
+        except:
+            pass
+
+    except Exception as e:
+        print("Errore inizializzazione: " + str(e))
+
+    try:
+        # (Buio. Pausa.)
+        time.sleep(2.0)
+
+        # (NAO accende le luci alzando lentamente un braccio verso l’alto)
+        nao.motion.angleInterpolation(["RShoulderPitch"], [-0.5], [2.0], True)
         
-        if posture:
-            posture.goToPosture("StandInit", 0.5)
-
-        if leds:
-            try:
-                leds.fadeRGB("FaceLeds", 0x000000, 0.5)
-                leds.fadeRGB("ChestLeds", 0x000000, 0.5)
-            except:
-                pass
-    except Exception as e:
-        logger.error("Errore in functionSetup: {}".format(e))
-
-
-# ----------------------------
-# FUNZIONI DI MOVIMENTO
-# ----------------------------
-
-def head(yaw, pitch, duration):
-    if motion:
-        motion.angleInterpolation(
-            ["HeadYaw", "HeadPitch"],
-            [yaw, pitch],
-            [duration, duration],
-            True
-        )
-
-def arms_both(l_pitch, l_roll, r_pitch, r_roll, duration):
-    if motion:
-        motion.angleInterpolation(
-            ["LShoulderPitch", "LShoulderRoll", "RShoulderPitch", "RShoulderRoll"],
-            [l_pitch, l_roll, r_pitch, r_roll],
-            [duration]*4,
-            True
-        )
-
-def right_arm_magic_pose(duration):
-    if motion:
-        motion.angleInterpolation(
-            ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw", "RHand"],
-            [0.95, -0.22, 1.0, 0.65, 0.15, 1.0],
-            [duration]*6,
-            True
-        )
-
-
-# ----------------------------
-# PRIMA FASE
-# ----------------------------
-
-def onInput_onStart():
-    try:
-        # ----------------------------
-        # CAMMINATA
-        # ----------------------------
-        if motion:
-            motion.setWalkTargetVelocity(0.6, 0.0, 0.0, 0.5)
-            time.sleep(3.0)
-
-            motion.setWalkTargetVelocity(0.22, 0.0, 0.0, 0.5)
-            time.sleep(2.0)
-
-            motion.setWalkTargetVelocity(0.0, 0.0, 0.0, 0.5)
-
+        # OBERON: Perfetto. Le luci sono accese... e lo sfondo impostato. Siamo pronti a entrare in scena.
+        # time.sleep(4.0)
+        
+        # (NAO abbassa il braccio e si porta in posizione neutra. Sfondo: bosco)
+        nao.posture.goToPosture("StandInit", 1.0)
+        
+        # CAMMINATA: 3 secondi normale + 2 secondi lenta
+        nao.motion.setWalkTargetVelocity(0.6, 0.0, 0.0, 0.5)
+        time.sleep(3.0)
+        nao.motion.setWalkTargetVelocity(0.22, 0.0, 0.0, 0.5)
+        time.sleep(2.0)
+        nao.motion.setWalkTargetVelocity(0.0, 0.0, 0.0, 0.5)
         time.sleep(0.5)
 
-        # ----------------------------
         # LUCI
-        # ----------------------------
-        if leds:
-            try:
-                leds.fadeRGB("FaceLeds", 0xFFFFFF, 2.0)
-                leds.fadeRGB("ChestLeds", 0xFFFFFF, 2.0)
-            except:
-                pass
-
-
-        time.sleep(1.0)
-
-        # ----------------------------
-        # ALI (MOVIMENTO LENTO + PAUSA LUNGA)
-        # ----------------------------
-        arms_both(0.7, 0.9, 0.7, -0.9, 2.0)  # lento
-        time.sleep(4.0)  # 🔥 tiene la posa
-
-        # Testa lenta (NON tocca le braccia)
-        head(0.25, -0.05, 1.2)
-        time.sleep(0.6)
-
-        head(-0.25, -0.05, 1.4)
-        time.sleep(0.6)
-
-        head(0.0, -0.05, 1.2)
-        time.sleep(0.6)
-
-
-       
-        #nao_manager.perform(stringa)
-
-        time.sleep(1.0)
-
-        # ----------------------------
-        # TESTA DX/SX
-        # ----------------------------
-        head(0.42, -0.08, 1.3)
-        time.sleep(0.5)
-
-        head(-0.42, -0.08, 1.5)
-        time.sleep(0.5)
-
-        head(0.0, -0.08, 1.2)
-        time.sleep(0.5)
-
-        # Passo indietro
-        if motion:
-            motion.moveTo(-0.05, 0.0, 0.0)
+        try:
+            nao.leds.fadeRGB("FaceLeds", 0xFFFFFF, 2.0)
+            nao.leds.fadeRGB("ChestLeds", 0xFFFFFF, 2.0)
+        except:
+            pass
         time.sleep(0.8)
 
-        # Guarda uomo
-        head(0.45, 0.05, 1.2)
-        time.sleep(1.2)
-
-        # Guarda donna
-        head(-0.45, 0.0, 1.3)
-        time.sleep(1.2)
-
-        # Ritorna
-        head(0.35, 0.0, 1.1)
-        time.sleep(0.7)
-
-        # ----------------------------
-        # POSA MAGIA
-        # ----------------------------
-        if motion:
-            motion.angleInterpolation(
-                ["HeadPitch", "LShoulderPitch", "RShoulderPitch"],
-                [0.28, 1.45, 1.45],
-                [1.2, 1.2, 1.2],
-                True
-            )
-        time.sleep(1.0)
-
-        # Mano tesa
-        if motion:
-            motion.angleInterpolation(
-                ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RHand"],
-                [0.95, -0.15, 1.0, 0.6, 1.0],
-                [1.2]*5,
-                True
-            )
-        time.sleep(1.0)
-
-        # DIALOGO: osservazione
-        # Inserisci qui il dialogo
-
-        time.sleep(1.0)
-
-        # ----------------------------
-        # MAGIA LUNGA
-        # ----------------------------
-        right_arm_magic_pose(1.2)
-
-        # DIALOGO: formula magica
-        # Inserisci qui il dialogo
-
-        # Movimento continuo (NON cambia posa)
-        if motion:
-            motion.angleInterpolation(["RWristYaw"], [-0.65], [1.6], True)
-            motion.angleInterpolation(["RWristYaw"], [0.45], [1.6], True)
-            motion.angleInterpolation(["RWristYaw"], [-0.35], [1.4], True)
-            motion.angleInterpolation(["RWristYaw"], [0.20], [1.2], True)
-
-        time.sleep(1.2)
-
-        # ----------------------------
-        # RESET
-        # ----------------------------
-        if posture:
-            posture.goToPosture("StandInit", 1.0)
-        time.sleep(1.0)
-
-        # Verso pubblico
-        if motion:
-            motion.moveTo(0.06, 0.0, 0.0)
-        time.sleep(0.8)
-
-        # ----------------------------
-        # ALI FINALI (SUPER EVIDENTI)
-        # ----------------------------
-        arms_both(0.65, 1.0, 0.65, -1.0, 2.2)  # molto lento
-        time.sleep(4.0)  # 🔥 posa lunga
-
-        # DIALOGO finale
-        # Inserisci qui il dialogo
-
+        # **NAO PUCK**
+        # _set_felice_
+        em.set_mood("felice")
+        
+        # (Braccia leggermente aperte, movimento leggero del busto)
+        arms_both(nao, 0.7, 0.9, 0.7, -0.9, 1.5)
+        
+        em.say("Per il bosco ho scorrazzato e nessun ateniese vi ho trovato sui cui occhi provare se il fiore è poi vero che suscita amore...")
         time.sleep(0.5)
 
-        # Uscita
-        if motion:
-            motion.moveTo(0.20, 0.0, 0.25)
+        # _set_sorpresa_
+        em.set_mood("sorpresa")
+        # (Testa che scatta a destra, poi a sinistra)
+        head(nao, 0.42, -0.08, 0.5)
+        time.sleep(0.3)
+        head(nao, -0.42, -0.08, 0.5)
+        time.sleep(0.3)
+        head(nao, 0.0, -0.05, 0.5)
 
-        # Spegne luci
-        if leds:
-            try:
-                leds.fadeRGB("FaceLeds", 0x000000, 1.5)
-                leds.fadeRGB("ChestLeds", 0x000000, 1.5)
-            except:
-                pass
+        em.say("Notte e pace... ma chi è là? Son d’Atene i vestimenti! È sicuramente questi colui che sdegna, come ha detto il mio Re, la sua fanciulla!")
+        time.sleep(0.5)
+
+        # _set_triste_
+        em.set_mood("triste")
+        # (Testa leggermente abbassata, braccia più vicine al corpo)
+        nao.motion.angleInterpolation(
+            ["HeadPitch", "LShoulderPitch", "RShoulderPitch"],
+            [0.28, 1.45, 1.45],
+            [1.0, 1.0, 1.0],
+            True
+        )
+        
+        em.say("Poverina... non s’azzarda certo a giacersi accanto a lui... lui che tanto ne disprezza affetto e cortesia...")
+        time.sleep(1.0)
+
+        # _set_rabbia_
+        em.set_mood("arrabbiato")
+        # (Un braccio si alza deciso in avanti)
+        nao.motion.angleInterpolation(
+            ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RHand"],
+            [0.95, -0.15, 1.0, 0.6, 1.0],
+            [0.8, 0.8, 0.8, 0.8, 0.8],
+            True
+        )
+        
+        em.say("Sui tuoi occhi, a te, villano, ecco verso il succo arcano! Quando gli occhi riaprirai, da essi Amor bandisca il sonno!")
+        
+        # MAGIA (movimento della mano)
+        right_arm_magic_pose(nao, 1.0)
+        nao.motion.angleInterpolation(["RWristYaw"], [-0.65], [0.5], True)
+        nao.motion.angleInterpolation(["RWristYaw"], [0.45], [0.5], True)
+        time.sleep(0.5)
+
+        # _set_felice_
+        em.set_mood("felice")
+        # (Braccia aperte, piccolo passo avanti)
+        nao.motion.moveTo(0.06, 0.0, 0.0)
+        arms_both(nao, 0.65, 1.0, 0.65, -1.0, 1.2)
+        
+        em.say("Ma ecco che arriva Oberon... da Oberon faccio ritorno!")
+        time.sleep(1.0)
+
+        # (Fine Fase 1)
+        # USCITA
+        nao.motion.moveTo(0.20, 0.0, 0.25)
+
+        # SPEGNIMENTO LUCI
+        try:
+            nao.leds.fadeRGB("FaceLeds", 0x000000, 1.5)
+            nao.leds.fadeRGB("ChestLeds", 0x000000, 1.5)
+        except:
+            pass
 
     except Exception as e:
-        logger.error("Errore durante l'esecuzione: {}".format(e))
-
+        print("Errore durante l'esecuzione: " + str(e))
 
 if __name__ == "__main__":
-    functionSetup()
-    onInput_onStart()
+    prima_fase()

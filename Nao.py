@@ -10,7 +10,7 @@ DEFAULT_MOTION_SPEED    = 0.2
 
 class Nao(object):
 
-    def __init__(self, ip_address, port=9559):
+    def __init__(self, ip_address="localhost", port=9559):
         """inizializza la connessione e carica i servizi di Nao."""
         logger.info("connessione a Nao su {}:{}".format(ip_address, port))
 
@@ -76,6 +76,7 @@ class Nao(object):
         logger.info("occhi -> colore={}".format(hex(color_hex)))
         if self.leds:
             self.leds.fadeRGB("FaceLeds", color_hex, DEFAULT_COLOR_FADE_TIME)
+            self.leds.fadeRGB("ChestLeds", color_hex, DEFAULT_COLOR_FADE_TIME)
 
 
     def move_head(self, pitch_angle):
