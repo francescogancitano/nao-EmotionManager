@@ -2,7 +2,9 @@
 
 import re
 
-from nao import Nao
+from time import sleep
+
+from Nao import Nao
 from utils import logger, determine_file_type, MOOD_CONFIG, NEUTRAL_CONFIG
 
 
@@ -22,14 +24,16 @@ class EmotionManager(object):
 
         if config:
             logger.info("emozione -> {}".format(config["log"]))
-            self.nao.set_eye_color(config["eye_color"])
-            self.nao.set_voice(config["voice_speed"], config["voice_tone"])
+            self.nao.set_eye_color(config["coloreOcchiHEX"])
+            self.nao.set_voice(config["voiceSpeed"], config["voiceTone"])
             self.nao.move_head(config["head"])
         else:
             logger.warning("mood '{}' non riconosciuto, uso neutro".format(mood_name))
-            self.nao.set_eye_color(NEUTRAL_CONFIG["eye_color"])
-            self.nao.set_voice(NEUTRAL_CONFIG["voice_speed"], NEUTRAL_CONFIG["voice_tone"])
+            self.nao.set_eye_color(NEUTRAL_CONFIG["coloreOcchiHEX"])
+            self.nao.set_voice(NEUTRAL_CONFIG["voiceSpeed"], NEUTRAL_CONFIG["voiceTone"])
             self.nao.move_head(0.0)
+
+        sleep(0.3)
 
 
     def perform(self, input_data, mood=None):
@@ -75,5 +79,6 @@ class EmotionManager(object):
 
 
 if __name__ == "__main__":
-    manager = EmotionManager("localhost")
-    manager.set_mood("happy")
+    manager = EmotionManager("192.168.178.36")
+
+    manager.perform("*set_sad Ciao, sono triste. *set_happy Ma ora sono felice! *set_angry E adesso arrabbiato! *set_neutral Torno neutro. *set_noia sono annoiato", mood=None)

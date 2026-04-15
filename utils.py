@@ -6,21 +6,19 @@ import io
 
 
 
-
-
 """QUESTI SONO UTILS PER L'EMOZIONI"""
-_MOOD_DEFAULTS = {                      #mv testa       mood per log          colore degli occhi          velocità voce      tono di voce
-            ("felice", "happy"):       {"head": -0.4,  "log":  "FELICE",     "coloreOcchiHEX": 0xFFFF00, "voiceSpeed": 120, "voiceTone": 1.2},
-            ("triste", "sad"):         {"head": 0.4,   "log":  "TRISTE",     "coloreOcchiHEX": 0x0000FF, "voiceSpeed": 75,  "voiceTone": 0.8},
-            ("arrabbiato", "angry"):   {"head": 0.0,   "log":  "ARRABBIATO", "coloreOcchiHEX": 0xFF0000, "voiceSpeed": 110, "voiceTone": 0.9},
-            ("neutro", "neutral"):     {"head": 0.0,   "log":  "NEUTRI",     "coloreOcchiHEX": 0xFFFFFF, "voiceSpeed": 100, "voiceTone": 1.0},
-            ("sorpresa", "surprised"): {"head": 0.0,   "log":  "SORPRESA",   "coloreOcchiHEX": 0xFFA500, "voiceSpeed": 100, "voiceTone": 1.1},
-            ("paura", "afraid"):       {"head": -0.2,  "log":  "PAURA",      "coloreOcchiHEX": 0xFF00FF, "voiceSpeed": 90,  "voiceTone": 0.7},
-            ("disgusto", "disgusted"): {"head": 0.2,   "log":  "DISGUSTO",   "coloreOcchiHEX": 0x00FF00, "voiceSpeed": 85,  "voiceTone": 0.9},
-            ("noia", "bored"):         {"head": 0.1,   "log":  "NOIA",       "coloreOcchiHEX": 0x808080, "voiceSpeed": 70,  "voiceTone": 0.95},
+_MOOD_DEFAULTS = {                  #mv testa       mood per log          colore degli occhi          velocità voce      tono di voce
+    ("felice",     "happy"):       {"head": -0.4,  "log":  "FELICE",     "coloreOcchiHEX": 0xFFFF00, "voiceSpeed": 120, "voiceTone": 1.2},
+    ("triste",     "sad"):         {"head":  0.4,  "log":  "TRISTE",     "coloreOcchiHEX": 0x0000FF, "voiceSpeed": 75,  "voiceTone": 0.8},
+    ("arrabbiato", "angry"):       {"head":  0.0,  "log":  "ARRABBIATO", "coloreOcchiHEX": 0xFF0000, "voiceSpeed": 110, "voiceTone": 0.9},
+    ("neutro",     "neutral"):     {"head":  0.0,  "log":  "NEUTRI",     "coloreOcchiHEX": 0xFFFFFF, "voiceSpeed": 100, "voiceTone": 1.0},
+    ("sorpresa",   "surprised"):   {"head":  0.0,  "log":  "SORPRESA",   "coloreOcchiHEX": 0xFFA500, "voiceSpeed": 100, "voiceTone": 1.1},
+    ("paura",      "afraid"):      {"head": -0.2,  "log":  "PAURA",      "coloreOcchiHEX": 0xFF00FF, "voiceSpeed": 90,  "voiceTone": 0.7},
+    ("disgusto",   "disgusted"):   {"head":  0.2,  "log":  "DISGUSTO",   "coloreOcchiHEX": 0x00FF00, "voiceSpeed": 85,  "voiceTone": 0.9},
+    ("noia",       "bored"):       {"head":  0.1,  "log":  "NOIA",       "coloreOcchiHEX": 0x808080, "voiceSpeed": 70,  "voiceTone": 0.95},
 }
 
-
+ 
 MOOD_CONFIG = {}
 for _keys, _config in _MOOD_DEFAULTS.items():
     for _key in _keys:
@@ -67,18 +65,27 @@ def is_text_file(path):
         return False
 
 
-def determine_file_type(file):
-    if is_audio_file(file):
-        return "audio", file       # caso file audio
+def determine_file_type(file_input):
+    if is_audio_file(file_input):
+        return "audio", file_input
 
-    elif is_text_file(file):       # caso file di testo
+    content = None
+    if is_text_file(file_input):
         try:
-            with io.open(file, 'r', encoding='utf-8') as f:
-                text = f.read()
-                return "text", text
+            with io.open(file_input, 'r', encoding='utf-8') as f:
+                content = f.read()
         except IOError as e:
             logger.error("errore lettura file: {}".format(e))
-            # FIX: Restituiamo una tupla di None invece di un return vuoto
-            return None, None 
+            return None, None
     else:
-        return "text", file        # caso stringa normale
+        content = file_input
+
+    # Forza la conversione in unicode per Python 2 se riceve stringhe di byte (str)
+    # In Python 3, 'bytes' è distinto da 'str', quindi il decode funziona correttamente.
+    if isinstance(content, bytes):
+        try:
+            content = content.decode('utf-8')
+        except (UnicodeDecodeError, AttributeError):
+            logger.warning("impossibile decodificare il testo in utf-8, procedo con il formato originale")
+
+    return "text", content

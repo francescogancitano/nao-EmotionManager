@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import qi
-import sys
+import qi, sys
 
 from utils import logger
 
@@ -28,9 +27,10 @@ class Nao(object):
         try:
             self.leds         = self.session.service("ALLeds")
             self.motion       = self.session.service("ALMotion")
+            self.posture      = self.session.service("ALRobotPosture")
             self.audio_player = self.session.service("ALAudioPlayer")
 
-            if not self.motion.robotIsWakeUp():
+            if self.motion and not self.motion.robotIsWakeUp():
                 self.motion.wakeUp()
 
             logger.info("robot fisico inizializzato")
@@ -39,11 +39,20 @@ class Nao(object):
             logger.warning("servizi fisici non disponibili, modalita' virtuale attiva")
             self.leds         = None
             self.motion       = None
+            self.posture      = None
             self.audio_player = None
 
 
     def say(self, text):
         """Fa parlare Nao."""
+        # Se il testo è unicode (Python 2), lo codifichiamo in utf-8 per il robot.
+        try:
+            if isinstance(text, unicode):
+                text = text.encode('utf-8')
+        except NameError:
+            # Python 3: str è già unicode, solitamente va bene così o si può codificare in bytes
+            pass
+
         logger.info("dico: {}".format(text))
         self.tts.say(text)
 
