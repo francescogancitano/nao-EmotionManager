@@ -58,7 +58,7 @@ def prima_fase():
         # (Braccia leggermente aperte, movimento leggero del busto)
         arms_both(nao, 0.7, 0.9, 0.7, -0.9, 1.5)
         
-        em.say("Per il bosco ho scorrazzato e nessun ateniese vi ho trovato sui cui occhi provare se il fiore è poi vero che suscita amore...")
+        nao.say("Per il bosco ho scorrazzato e nessun ateniese vi ho trovato sui cui occhi provare se il fiore è poi vero che suscita amore...")
         time.sleep(0.5)
 
         # _set_sorpresa_
@@ -70,7 +70,7 @@ def prima_fase():
         time.sleep(0.3)
         head(nao, 0.0, -0.05, 0.5)
 
-        em.say("Notte e pace... ma chi è là? Son d’Atene i vestimenti! È sicuramente questi colui che sdegna, come ha detto il mio Re, la sua fanciulla!")
+        nao.say("Notte e pace... ma chi è là? Son d’Atene i vestimenti! È sicuramente questi colui che sdegna, come ha detto il mio Re, la sua fanciulla!")
         time.sleep(0.5)
 
         # _set_triste_
@@ -83,7 +83,7 @@ def prima_fase():
             True
         )
         
-        em.say("Poverina... non s’azzarda certo a giacersi accanto a lui... lui che tanto ne disprezza affetto e cortesia...")
+        nao.say("Poverina... non s’azzarda certo a giacersi accanto a lui... lui che tanto ne disprezza affetto e cortesia...")
         time.sleep(1.0)
 
         # _set_rabbia_
@@ -96,7 +96,7 @@ def prima_fase():
             True
         )
         
-        em.say("Sui tuoi occhi, a te, villano, ecco verso il succo arcano! Quando gli occhi riaprirai, da essi Amor bandisca il sonno!")
+        nao.say("Sui tuoi occhi, a te, villano, ecco verso il succo arcano! Quando gli occhi riaprirai, da essi Amor bandisca il sonno!")
         
         # MAGIA (movimento della mano)
         right_arm_magic_pose(nao, 1.0)
@@ -110,7 +110,7 @@ def prima_fase():
         nao.motion.moveTo(0.06, 0.0, 0.0)
         arms_both(nao, 0.65, 1.0, 0.65, -1.0, 1.2)
         
-        em.say("Ma ecco che arriva Oberon... da Oberon faccio ritorno!")
+        nao.say("Ma allora saro lontano....... perche da Oberon faccio ritorno!")
         time.sleep(1.0)
 
         # (Fine Fase 1)

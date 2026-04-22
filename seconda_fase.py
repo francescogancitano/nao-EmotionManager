@@ -46,7 +46,7 @@ def esegui_blocco1(mood):
             head(nao, 0.0, 0.25, 1.5)
             
         em.set_mood(m)
-        em.say(testi[m])
+        nao.say(testi[m])
         time.sleep(1.0)
     else:
         print("Mood '{}' non riconosciuto per Blocco 1".format(mood))
@@ -85,7 +85,7 @@ def esegui_blocco2(mood):
             head(nao, 0.0, 0.45, 2.0)
             
         em.set_mood(m)
-        em.say(testi[m])
+        nao.say(testi[m])
         time.sleep(1.0)
     else:
         print("Mood '{}' non riconosciuto per Blocco 2".format(mood))
@@ -110,48 +110,48 @@ def fase2(mood1, mood2):
 
         # **NAO PUCK**
         em.set_mood("felice")
-        em.say("Nei pressi del suo giaciglio... un branco di giudici di una gara s’era riunito a vedere un dramma...")
+        nao.say("Nei pressi del suo giaciglio... un branco di giudici di una gara s’era riunito a vedere un dramma...")
         time.sleep(0.5)
 
         em.set_mood("sorpresa")
         indicate_jury(nao, 1.0)
-        em.say("Uno di questi uscì... per parlare con la regina.")
+        nao.say("Uno di questi uscì... per parlare con la regina.")
         time.sleep(1.0)
         
-        em.say("E allora io—")
+        nao.say("E allora io")
         pour_motion(nao, 1.2)
-        em.say("le versai nell’occhio il succo arcano!")
+        nao.say("le versai nell’occhio il succo arcano!")
         
         close_right_hand(nao, 0.4)
         time.sleep(0.2)
 
         em.set_mood("felice")
         open_arms_small(nao, 1.0)
-        em.say("La regina si destò... e di lui subito s’innamorò!")
+        nao.say("La regina si destò... e di lui subito s’innamorò!")
         
         # OBERON: La cosa è riuscita meglio di quanto pensassi!
         
         em.set_mood("triste")
         head(nao, 0.0, 0.20, 1.1)
-        em.say("Sì, mio re... ma... c’è stato un leggerissimo problema...")
+        nao.say("Sì, mio re... ma... c’è stato un leggerissimo problema...")
         
         # OBERON: Ovvero?
 
         em.set_mood("triste")
         head(nao, 0.0, 0.35, 1.5)
-        em.say("Guardai il volto della regina... e mai sfortuna fu così inaspettata...")
+        nao.say("Guardai il volto della regina... e mai sfortuna fu così inaspettata...")
         time.sleep(1.0)
 
         em.set_mood("arrabbiato")
         head(nao, 0.0, -0.05, 0.3)
         indicate_jury(nao, 0.6)
-        em.say("Era... il Duca Pedemonte.")
+        nao.say("Era... il Duca Pedemonte.")
         
         # OBERON: Puck! Sei l’assistente più inutile!
 
         em.set_mood("triste")
         nao.motion.moveTo(-0.05, 0.0, 0.0)
-        em.say("Maestà... era buio... e poi... i giudici si assomigliano tutti...")
+        nao.say("Maestà... era buio... e poi... i giudici si assomigliano tutti...")
         
         # OBERON: Ora la mia regina si è innamorata di un idiota! (pausa) No... si può ancora sistemare.
 
@@ -168,11 +168,11 @@ def fase2(mood1, mood2):
 
         em.set_mood("determinato")
         final_pose(nao, 1.0)
-        em.say("Stavolta no, mio re. Guarderò meglio. Agirò meglio.")
+        nao.say("Stavolta no, mio re. Guarderò meglio. Agirò meglio.")
         
         time.sleep(0.5)
         head(nao, 0.0, -0.05, 0.6)
-        em.say("...forse.")
+        nao.say("...forse.")
         
         # (Blackout)
         nao.posture.goToPosture("Sit", 1.0)
@@ -182,4 +182,4 @@ def fase2(mood1, mood2):
         print("Errore durante Fase 2: " + str(e))
 
 if __name__ == "__main__":
-    fase2("rabbia", "determinato")
+    fase2("arrabbiato", "felice")

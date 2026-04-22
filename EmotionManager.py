@@ -81,4 +81,4 @@ class EmotionManager(object):
 if __name__ == "__main__":
     manager = EmotionManager()
 
-    manager.perform("*set_sad Ciao, sono triste. *set_happy Ma ora sono felice! *set_angry E adesso arrabbiato! *set_neutral Torno neutro. *set_noia sono annoiato", mood=None)
+    manager.perform("cetttu", mood="sad")

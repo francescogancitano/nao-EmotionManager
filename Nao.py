@@ -10,7 +10,7 @@ DEFAULT_MOTION_SPEED    = 0.2
 
 class Nao(object):
 
-    def __init__(self, ip_address="localhost", port=9559):
+    def __init__(self, ip_address="192.168.178.36", port=9559):
         """inizializza la connessione e carica i servizi di Nao."""
         logger.info("connessione a Nao su {}:{}".format(ip_address, port))
 
