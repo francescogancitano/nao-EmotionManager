@@ -19,6 +19,22 @@ _MOOD_DEFAULTS = {                  #mv testa       mood per log          colore
     ("determinato", "determined"): {"head": -0.4,  "log":  "DETERMINATO", "coloreOcchiHEX": 0x00FFFF, "voiceSpeed": 100, "voiceTone": 1.1},
 }
 
+PATH_FOR_AUDIO = "$HOME/Documents/battute nao/"
+
+AUDIO_FILES = {
+    "nei pressi": PATH_FOR_AUDIO + "nei pressi.wav",
+    "uno di questi usci": PATH_FOR_AUDIO + "uno di questi usci.wav",
+    "le versai nell’occhio il succo arcano": PATH_FOR_AUDIO + "e allora io.wav",
+    "la regina si desto": PATH_FOR_AUDIO + "la regina si desto.wav",
+    "si mio re ma": PATH_FOR_AUDIO + "si mio re ma.wav",
+    "e mai sfortuna": PATH_FOR_AUDIO + "e mai sfortuna.wav",
+    "era il duca": PATH_FOR_AUDIO + "era il duca.wav",
+    "maesta era buio": PATH_FOR_AUDIO + "maesta era buio.wav",
+    "e colpa mia": PATH_FOR_AUDIO + "e colpa mia.wav",
+    "posso rimediare": PATH_FOR_AUDIO + "posso rimediare.wav",
+    "forse": PATH_FOR_AUDIO + "forse.wav"
+}
+
 
 """
 felicita 120
