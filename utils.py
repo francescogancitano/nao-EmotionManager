@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import colorlog
-import logging
-import io
-
+import colorlog, logging, io
 
 
 """QUESTI SONO UTILS PER L'EMOZIONI"""
