@@ -8,6 +8,7 @@ from utils.utils_positions import head, arms_both, right_arm_magic_pose
 from faro import *
 from utils.audio import *
 
+
 VERDE    = 0x00FF00
 VIOLETTO = 0xC58EE8
 ROSSO    = 0x80190E
@@ -15,8 +16,6 @@ ROSSO    = 0x80190E
 # Inizializzazione EmotionManager (default localhost)
 em = EmotionManager()
 nao = em.nao
-
-
 
 
 def prima_fase():
@@ -60,11 +59,32 @@ def prima_fase():
         nao.set_body_color(ROSSO)
 
         em.perform(AUDIO_FILES["urlo"])
-        em.perform(AUDIO_FILES["ancora non avete fatto niente"])
+        
+        # Camminata bloccante di 75cm (lenta)
+        nao.motion.moveTo(0.60, 0.0, 0.0)
 
-
-        #FIXME GEMINI: fallo andare avanti lentamente di 75cm con una chiamata bloccante
-        #FIXME GEMINI: deve mettersi con le braccia in questa forma : <> e poi così || e lo deve fare per 5 volte mentre parla
+        # Avvio audio in background per muoversi mentre parla
+        if nao.audio_player:
+            nao.audio_player.post.playFile(AUDIO_FILES["ancora non avete fatto niente"])
+        else:
+            em.perform(AUDIO_FILES["ancora non avete fatto niente"])
+        
+        # Movimento braccia <> e || per 5 volte
+        for _ in range(5):
+            # Forma <>
+            nao.motion.angleInterpolation(
+                ["LShoulderRoll", "RShoulderRoll", "LElbowRoll", "RElbowRoll"],
+                [0.7, -0.7, -1.2, 1.2],
+                [0.4, 0.4, 0.4, 0.4],
+                True
+            )
+            # Forma ||
+            nao.motion.angleInterpolation(
+                ["LShoulderRoll", "RShoulderRoll", "LElbowRoll", "RElbowRoll"],
+                [0.1, -0.1, -0.05, 0.05],
+                [0.4, 0.4, 0.4, 0.4],
+                True
+            )
 
         nao.motion.angleInterpolation(["RShoulderPitch"], [-0.5], [2.0], True)
         em.perform(AUDIO_FILES["accendete le luci"])
@@ -127,22 +147,38 @@ def prima_fase():
         head(nao, 0.0, -0.05, 0.5)
 
 
-        #FIXME GEMINI: fagli alzare le braccia verso il cielo, e falle scendere piano piano mentre che dice "notte e pace"
+        # Alza le braccia verso il cielo
+        nao.motion.angleInterpolation(
+            ["LShoulderPitch", "RShoulderPitch"],
+            [-0.5, -0.5],
+            [1.0, 1.0],
+            True
+        )
 
-        em.perform(input_data=AUDIO_FILES["notte e pace"])        
-        #em.perform(input_data="Notte e pace...")
+        # Avvio audio e discesa lenta delle braccia
+        if nao.audio_player:
+            nao.audio_player.post.playFile(AUDIO_FILES["notte e pace"])
+        else:
+            em.perform(AUDIO_FILES["notte e pace"])
+
+        nao.motion.angleInterpolation(
+            ["LShoulderPitch", "RShoulderPitch"],
+            [1.5, 1.5],
+            [4.0, 4.0],
+            True
+        )
+
         """nello stacco tra pace e ma chi, cambiare la luce a viola chiaro"""
 
         cambia_colore_luci(VIOLETTO)
 
-        
-
         em.perform(input_data=AUDIO_FILES["ma chi è la"]) 
-        #em.perform(input_data="....ma chi è là? Son d’Atene i vestimenti! È sicuramente questi colui che sdegna, come ha detto il mio Re, la sua fanciulla!")
-        #FIXME GEMINI: fagli alzare il braccio sinistro dritto
+        
+        # Alza braccio sinistro dritto
+        nao.motion.angleInterpolation(["LShoulderPitch"], [-1.5], [0.6], True)
         time.sleep(0.5)
-
-        #FIXME GEMINI: faglielo abbassare
+        # Lo abbassa
+        nao.motion.angleInterpolation(["LShoulderPitch"], [1.5], [0.6], True)
 
         # _set_triste_
         em.set_mood("triste")
@@ -156,9 +192,12 @@ def prima_fase():
 
         cambia_colore_luci(VERDE)
         
-        #FIXME GEMINI: fagli il braccio destro in un algolo retto verso destra e poi rimettilo dov'era dopo 0.5 sec
+        # Braccio destro in angolo retto verso destra e poi torna
+        nao.motion.angleInterpolation(["RShoulderPitch", "RShoulderRoll"], [0.0, -1.5], [0.5, 0.5], True)
+        time.sleep(0.5)
+        nao.motion.angleInterpolation(["RShoulderPitch", "RShoulderRoll"], [1.5, -0.15], [0.5, 0.5], True)
+
         em.perform(input_data=AUDIO_FILES["poverina"])        
-        #em.perform(input_data="Poverina... non s’azzarda certo a giacersi accanto a lui... lui che tanto ne disprezza affetto e cortesia...")
         time.sleep(1.0)
 
         # _set_rabbia_
@@ -173,9 +212,27 @@ def prima_fase():
 
         #prima della battuta il colore deve diventare rosso scurissimo
         cambia_colore_luci(ROSSO)
-        em.perform(input_data=AUDIO_FILES["sui tuoi occhi"])
-        #FIXME GEMINI: mettigli le braccia dritte e poi falle muovere come se stesse lanciando un incantesimo facendo alzare braccio destro e abbassando il sinistro e viceversa per tipo 3 volte, ovviamente falli oscillare di poco    
-        #em.perform(input_data="Sui tuoi occhi, a te, villano, ecco verso il succo arcano! Quando gli occhi riaprirai, da essi Amor bandisca il sonno!")
+        
+        # Avvio audio incantesimo
+        if nao.audio_player:
+            nao.audio_player.post.playFile(AUDIO_FILES["sui tuoi occhi"])
+        else:
+            em.perform(AUDIO_FILES["sui tuoi occhi"])
+
+        # Movimento incantesimo: braccia dritte che oscillano
+        for _ in range(3):
+            nao.motion.angleInterpolation(
+                ["LShoulderPitch", "RShoulderPitch"],
+                [0.8, 1.2],
+                [0.4, 0.4],
+                True
+            )
+            nao.motion.angleInterpolation(
+                ["LShoulderPitch", "RShoulderPitch"],
+                [1.2, 0.8],
+                [0.4, 0.4],
+                True
+            )
         
         # MAGIA (movimento della mano)
         right_arm_magic_pose(nao, 1.0)
