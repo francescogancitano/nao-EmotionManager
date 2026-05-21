@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import qi, sys
-
-from utils import logger
+from utils.log import logger
 
 DEFAULT_COLOR_FADE_TIME = 0.2
 DEFAULT_MOTION_SPEED    = 0.2
@@ -10,7 +9,7 @@ DEFAULT_MOTION_SPEED    = 0.2
 
 class Nao(object):
 
-    def __init__(self, ip_address="localhost", port=9559):
+    def __init__(self, ip_address="192.168.178.36", port=9559):
         """inizializza la connessione e carica i servizi di Nao."""
         logger.info("connessione a Nao su {}:{}".format(ip_address, port))
 
@@ -68,12 +67,12 @@ class Nao(object):
         self.tts.setParameter("pitchShift", tone)
 
 
-    def set_eye_color(self, color_hex):
+    def set_body_color(self, color_hex):
         """
         imposta il colore degli occhi (LED).
         color_hex: intero esadecimale, es. 0xFF0000 per rosso
         """
-        logger.info("occhi -> colore={}".format(hex(color_hex)))
+        logger.info("nao -> colore={}".format(hex(color_hex)))
         if self.leds:
             self.leds.fadeRGB("FaceLeds", color_hex, DEFAULT_COLOR_FADE_TIME)
             self.leds.fadeRGB("ChestLeds", color_hex, DEFAULT_COLOR_FADE_TIME)

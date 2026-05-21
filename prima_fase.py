@@ -1,21 +1,34 @@
 # -*- coding: utf-8 -*-
+
+import time, sys
+
 from EmotionManager import EmotionManager
-from utils_positions import head, arms_both, right_arm_magic_pose
-import time
+
+from utils.utils_positions import head, arms_both, right_arm_magic_pose
+from faro import *
+from utils.audio import *
+
+VERDE    = 0x00FF00
+VIOLETTO = 0xC58EE8
+ROSSO    = 0x80190E
 
 # Inizializzazione EmotionManager (default localhost)
 em = EmotionManager()
 nao = em.nao
 
+
+
+
 def prima_fase():
     try:
-        nao.motion.wakeUp()
+        #nao.motion.wakeUp()
         nao.posture.goToPosture("StandInit", 0.5)
-        nao.motion.setStiffnesses("Body", 1.0)
+        nao.motion.setStiffnesses("Body", 0.6)  #imposta la rigidità del corpo
+        pass
 
         try:
-            nao.leds.fadeRGB("FaceLeds", 0x000000, 0.5)
-            nao.leds.fadeRGB("ChestLeds", 0x000000, 0.5)
+            nao.set_body_color(0xffffff)
+
         except:
             pass
 
@@ -24,10 +37,51 @@ def prima_fase():
 
     try:
         # (Buio. Pausa.)
-        time.sleep(2.0)
+        
 
-        # (NAO accende le luci alzando lentamente un braccio verso l’alto)
+        """
+            arriva incazzato
+            dice: 'ANCORA NON AVETE FATTO NIENTE'
+            sventola le mani basso siddiato
+
+            grida: 'ACCENDETEMI IL FARO E PREPARATEMI LA SCENA'
+
+            sleep(1)
+            grida: 'SI VA IN SCENA'
+        
+        """
+        """
+        
+            QUI CI DEVE ESSERE
+            TUTTA LA PARTE 
+            DELLA PROVA TECNICA
+        
+        """
+        nao.set_body_color(ROSSO)
+
+        em.perform(AUDIO_FILES["urlo"])
+        em.perform(AUDIO_FILES["ancora non avete fatto niente"])
+
+
+        #FIXME GEMINI: fallo andare avanti lentamente di 75cm con una chiamata bloccante
+        #FIXME GEMINI: deve mettersi con le braccia in questa forma : <> e poi così || e lo deve fare per 5 volte mentre parla
+
         nao.motion.angleInterpolation(["RShoulderPitch"], [-0.5], [2.0], True)
+        em.perform(AUDIO_FILES["accendete le luci"])
+
+        time.sleep(3)
+        accendi_luci()
+
+        time.sleep(0.5)
+        cambia_colore_luci(ROSSO)
+        
+        time.sleep(2)
+
+        em.perform(AUDIO_FILES["si va in scena"])
+        
+        time.sleep(1)
+        cambia_colore_luci(VERDE)
+        
         
         # OBERON: Perfetto. Le luci sono accese... e lo sfondo impostato. Siamo pronti a entrare in scena.
         # time.sleep(4.0)
@@ -36,19 +90,19 @@ def prima_fase():
         nao.posture.goToPosture("StandInit", 1.0)
         
         # CAMMINATA: 3 secondi normale + 2 secondi lenta
-        nao.motion.setWalkTargetVelocity(0.6, 0.0, 0.0, 0.5)
+        nao.motion.setWalkTargetVelocity(0.6, 0.0, 0.0, 0.4)
         time.sleep(3.0)
-        nao.motion.setWalkTargetVelocity(0.22, 0.0, 0.0, 0.5)
+        nao.motion.setWalkTargetVelocity(0.22, 0.0, 0.0, 0.4)
         time.sleep(2.0)
-        nao.motion.setWalkTargetVelocity(0.0, 0.0, 0.0, 0.5)
+        nao.motion.setWalkTargetVelocity(0.0, 0.0, 0.0, 0.4)
         time.sleep(0.5)
 
         # LUCI
         try:
-            nao.leds.fadeRGB("FaceLeds", 0xFFFFFF, 2.0)
-            nao.leds.fadeRGB("ChestLeds", 0xFFFFFF, 2.0)
+            nao.set_body_color(0xffffff)
         except:
             pass
+
         time.sleep(0.8)
 
         # **NAO PUCK**
@@ -58,7 +112,9 @@ def prima_fase():
         # (Braccia leggermente aperte, movimento leggero del busto)
         arms_both(nao, 0.7, 0.9, 0.7, -0.9, 1.5)
         
-        nao.say("Per il bosco ho scorrazzato e nessun ateniese vi ho trovato sui cui occhi provare se il fiore è poi vero che suscita amore...")
+
+        em.perform(input_data=AUDIO_FILES["per il bosco"])        
+        #em.perform(input_data="Per il bosco ho scorrazzato e nessun ateniese vi ho trovato sui cui occhi provare se il fiore è poi vero che suscita amore...")
         time.sleep(0.5)
 
         # _set_sorpresa_
@@ -70,8 +126,23 @@ def prima_fase():
         time.sleep(0.3)
         head(nao, 0.0, -0.05, 0.5)
 
-        nao.say("Notte e pace... ma chi è là? Son d’Atene i vestimenti! È sicuramente questi colui che sdegna, come ha detto il mio Re, la sua fanciulla!")
+
+        #FIXME GEMINI: fagli alzare le braccia verso il cielo, e falle scendere piano piano mentre che dice "notte e pace"
+
+        em.perform(input_data=AUDIO_FILES["notte e pace"])        
+        #em.perform(input_data="Notte e pace...")
+        """nello stacco tra pace e ma chi, cambiare la luce a viola chiaro"""
+
+        cambia_colore_luci(VIOLETTO)
+
+        
+
+        em.perform(input_data=AUDIO_FILES["ma chi è la"]) 
+        #em.perform(input_data="....ma chi è là? Son d’Atene i vestimenti! È sicuramente questi colui che sdegna, come ha detto il mio Re, la sua fanciulla!")
+        #FIXME GEMINI: fagli alzare il braccio sinistro dritto
         time.sleep(0.5)
+
+        #FIXME GEMINI: faglielo abbassare
 
         # _set_triste_
         em.set_mood("triste")
@@ -82,8 +153,12 @@ def prima_fase():
             [1.0, 1.0, 1.0],
             True
         )
+
+        cambia_colore_luci(VERDE)
         
-        nao.say("Poverina... non s’azzarda certo a giacersi accanto a lui... lui che tanto ne disprezza affetto e cortesia...")
+        #FIXME GEMINI: fagli il braccio destro in un algolo retto verso destra e poi rimettilo dov'era dopo 0.5 sec
+        em.perform(input_data=AUDIO_FILES["poverina"])        
+        #em.perform(input_data="Poverina... non s’azzarda certo a giacersi accanto a lui... lui che tanto ne disprezza affetto e cortesia...")
         time.sleep(1.0)
 
         # _set_rabbia_
@@ -95,8 +170,12 @@ def prima_fase():
             [0.8, 0.8, 0.8, 0.8, 0.8],
             True
         )
-        
-        nao.say("Sui tuoi occhi, a te, villano, ecco verso il succo arcano! Quando gli occhi riaprirai, da essi Amor bandisca il sonno!")
+
+        #prima della battuta il colore deve diventare rosso scurissimo
+        cambia_colore_luci(ROSSO)
+        em.perform(input_data=AUDIO_FILES["sui tuoi occhi"])
+        #FIXME GEMINI: mettigli le braccia dritte e poi falle muovere come se stesse lanciando un incantesimo facendo alzare braccio destro e abbassando il sinistro e viceversa per tipo 3 volte, ovviamente falli oscillare di poco    
+        #em.perform(input_data="Sui tuoi occhi, a te, villano, ecco verso il succo arcano! Quando gli occhi riaprirai, da essi Amor bandisca il sonno!")
         
         # MAGIA (movimento della mano)
         right_arm_magic_pose(nao, 1.0)
@@ -109,8 +188,11 @@ def prima_fase():
         # (Braccia aperte, piccolo passo avanti)
         nao.motion.moveTo(0.06, 0.0, 0.0)
         arms_both(nao, 0.65, 1.0, 0.65, -1.0, 1.2)
-        
-        nao.say("Ma allora saro lontano....... perche da Oberon faccio ritorno!")
+
+        cambia_colore_luci(0xffffff)
+        #luce torna colore normale
+        em.perform(input_data=AUDIO_FILES["ma allora"])        
+        #em.perform(input_data="Ma allora saro lontano....... perche da Oberon faccio ritorno!")
         time.sleep(1.0)
 
         # (Fine Fase 1)
@@ -119,13 +201,15 @@ def prima_fase():
 
         # SPEGNIMENTO LUCI
         try:
-            nao.leds.fadeRGB("FaceLeds", 0x000000, 1.5)
-            nao.leds.fadeRGB("ChestLeds", 0x000000, 1.5)
+            nao.set_body_color(0xffffff)
         except:
             pass
 
     except Exception as e:
         print("Errore durante l'esecuzione: " + str(e))
 
+
+
 if __name__ == "__main__":
+    nao.set_body_color(0xffffff)
     prima_fase()

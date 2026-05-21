@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import re
-
+import sys
 from time import sleep
 
 from Nao import Nao
-from utils import logger, determine_file_type, MOOD_CONFIG, NEUTRAL_CONFIG
 
+from utils.log import logger
+from utils.utils import determine_file_type
+from utils.emotions import MOOD_CONFIG, NEUTRAL_CONFIG
 
 class EmotionManager(object):
 
@@ -24,12 +26,12 @@ class EmotionManager(object):
 
         if config:
             logger.info("emozione -> {}".format(config["log"]))
-            self.nao.set_eye_color(config["coloreOcchiHEX"])
+            self.nao.set_body_color(config["coloreOcchiHEX"])
             self.nao.set_voice(config["voiceSpeed"], config["voiceTone"])
             self.nao.move_head(config["head"])
         else:
             logger.warning("mood '{}' non riconosciuto, uso neutro".format(mood_name))
-            self.nao.set_eye_color(NEUTRAL_CONFIG["coloreOcchiHEX"])
+            self.nao.set_body_color(NEUTRAL_CONFIG["coloreOcchiHEX"])
             self.nao.set_voice(NEUTRAL_CONFIG["voiceSpeed"], NEUTRAL_CONFIG["voiceTone"])
             self.nao.move_head(0.0)
 

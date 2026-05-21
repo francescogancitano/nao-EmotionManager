@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
+
+import time, sys
+
 from EmotionManager import EmotionManager
-from utils_positions import (
+
+from utils.utils_positions import (
     head, close_arms, indicate_jury, pour_motion, 
     close_right_hand, open_arms_small, arms_sad, 
     arms_open_happy, final_pose
 )
-from utils import AUDIO_FILES
 
-import time
+from utils.audio import AUDIO_FILES
+from faro import *
+
+
 
 # Inizializzazione EmotionManager (default localhost)
 em = EmotionManager()
@@ -99,13 +105,13 @@ def esegui_blocco2(mood):
 def fase2(mood1, mood2):
     try:
         # Inizializzazione
-        nao.posture.goToPosture("StandInit", 0.8)
+        #nao.posture.goToPosture("StandInit", 0.8)
         time.sleep(1.0)
         close_arms(nao, 0.6)
         time.sleep(0.5)
 
         # Entra e si ferma davanti a Oberon
-        nao.motion.moveTo(0.15, 0.0, 0.0)
+        #nao.motion.moveTo(0.15, 0.0, 0.0)
         time.sleep(0.8)
 
         # Inchino leggero
@@ -163,7 +169,7 @@ def fase2(mood1, mood2):
         # OBERON: Puck! Sei l’assistente più inutile!
         time.sleep(3)
         #em.set_mood(mood1)
-        nao.motion.moveTo(-0.05, 0.0, 0.0)
+        #nao.motion.moveTo(-0.05, 0.0, 0.0)
         #nao.say("Maestà... era buio... e poi... i giudici si assomigliano tutti...")
         em.perform(AUDIO_FILES["maesta era buio"], mood=mood1)
 
@@ -172,15 +178,16 @@ def fase2(mood1, mood2):
         time.sleep(8)
         # INSERISCI BLOCCO 1
         #esegui_blocco1(mood2)
+        em.perform(AUDIO_FILES["si ho sbagliato"], mood=mood2)
 
         # OBERON: Basta esitazioni. Serve una soluzione... subito.
         time.sleep(5.5)
         # INSERISCI BLOCCO 2
-        #esegui_blocco2(mood1)
+        #em.perform(AUDIO_FILES[""])
 
         # FINALE
         # OBERON: Vai, Puck. E questa volta... non sbagliare bersaglio.
-        time.sleep(5.5)     #temp della battuta
+        #time.sleep(5.5)     #temp della battuta
         #em.set_mood(mood2)
         final_pose(nao, 1.0)
         #nao.say("Stavolta no, mio re. Guarderò meglio. Agirò meglio.")
@@ -199,4 +206,4 @@ def fase2(mood1, mood2):
         print("Errore durante Fase 2: " + str(e))
 
 if __name__ == "__main__":
-    fase2("triste", "arrabbiato")
+    fase2("felice", "arrabbiato")
