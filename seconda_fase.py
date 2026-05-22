@@ -7,13 +7,36 @@ from EmotionManager import EmotionManager
 from utils.utils_positions import (
     head, close_arms, indicate_jury, pour_motion, 
     close_right_hand, open_arms_small, arms_sad, 
-    arms_open_happy, final_pose
+    arms_open_happy, final_pose, arms_both
 )
 
 from utils.audio import AUDIO_FILES
 from faro import *
 
 
+
+"""
+PROBLEMI: 
+
+
+
+"""
+
+
+
+
+
+
+
+
+
+# Definizioni colori per la scena
+VERDE    = 0x00FF00  # Bosco / Natura
+VIOLETTO = 0xC58EE8  # Magia / Amore
+ROSSO    = 0x80190E  # Tensione / Errore
+BLU      = 0x0000FF  # Tristezza / Esitazione
+CIANO    = 0x00FFFF  # Determinazione
+BIANCO   = 0xFFFFFF  # Neutro / Inizio
 
 # Inizializzazione EmotionManager (default localhost)
 em = EmotionManager()
@@ -30,7 +53,7 @@ def esegui_blocco1(mood):
         "paura": "Siamo perduti... non posso rimediare...",
         "disgusto": "Che errore terribile... è insopportabile...",
         "noia": "Sì... ho sbagliato... che novità...",
-        "felice": "È un successo! Tutto sta andando a meraviglia!",
+        "felice": "È un success! Tutto sta andando a meraviglia!",
         "sorpresa": "Cosa? Com'è possibile tutto questo?",
         "determinato": "Riuscirò nella mia missione, costi quel che costi!",
         "neutro": "Sì, mio signore. Procederò come richiesto."
@@ -105,8 +128,10 @@ def esegui_blocco2(mood):
 def fase2(mood1, mood2):
     try:
         # Inizializzazione
-        #nao.posture.goToPosture("StandInit", 0.8)
-        time.sleep(1.0)
+        nao.posture.goToPosture("StandInit", 0.8)
+        nao.motion.setStiffnesses("Body", 1.0)
+        #cambia_colore_luci(BIANCO) # Luce bianca per iniziare la scena
+        time.sleep(0.5)
         close_arms(nao, 0.6)
         time.sleep(0.5)
 
@@ -123,16 +148,26 @@ def fase2(mood1, mood2):
         # **NAO PUCK**
         #em.set_mood(mood1)
         #nao.say("Nei pressi del suo giaciglio... un branco di giudici di una gara s’era riunito a vedere un dramma...")
-        em.perform(AUDIO_FILES["nei pressi"], mood=mood1)
+        #cambia_colore_luci(VERDE) # Luce verde: Puck racconta del bosco
+        if nao.audio_player:
+            nao.audio_player.playFile(AUDIO_FILES["nei pressi"], _async=True)
+            # Piccolo movimento descrittivo
+            arms_both(nao, 1.0, 0.3, 1.0, -0.3, 1.5)
+            time.sleep(1.5)
+            arms_both(nao, 1.2, 0.1, 1.2, -0.1, 1.5)
+        else:
+            em.perform(AUDIO_FILES["nei pressi"], mood=mood1)
         time.sleep(0.5)
 
         #em.set_mood(mood2)
-        indicate_jury(nao, 1.0)
+        indicate_jury(nao, 0.8)
         #nao.say("Uno di questi uscì... per parlare con la regina.")
         em.perform(AUDIO_FILES["uno di questi usci"], mood=mood2)
-        time.sleep(1.0)
+        time.sleep(0.5)
         
-        #nao.say("E allora io")
+        #nao.say("E allora io"
+        
+        #cambia_colore_luci(VIOLETTO) # Luce violetta: momento magico del succo
         pour_motion(nao, 1.2)
         #nao.say("le versai nell’occhio il succo arcano!")
         em.perform(AUDIO_FILES["le versai nell’occhio il succo arcano"], mood=mood2)
@@ -148,19 +183,23 @@ def fase2(mood1, mood2):
         
         time.sleep(3.4)       #TEMPO CHE OBERON DICE LA BATTUTA
         #em.set_mood(mood2)
-        head(nao, 0.0, 0.20, 1.1)
+        #cambia_colore_luci(BLU) # Luce blu: Puck introduce il problema con esitazione
+        head(nao, 0.0, 0.25, 1.0)
+        arms_sad(nao, 1.2)
         #nao.say("Sì, mio re... ma... c’è stato un leggerissimo problema...")
         em.perform(AUDIO_FILES["si mio re ma"], mood=mood2)
         # OBERON: Ovvero?
 
+        time.sleep(1.5)
         #em.set_mood(mood1)
-        head(nao, 0.0, 0.35, 1.5)
-        #FIXME: mi sono scordato nell'audio di mettere il pezzo guardai il volto della regina, se va tutto bene rigener l'audio e aggiungi questo pezzo mancante
+        head(nao, 0.2, 0.35, 1.5)
+
         #nao.say("Guardai il volto della regina... e mai sfortuna fu così inaspettata...")
         em.perform(AUDIO_FILES["e mai sfortuna"], mood=mood1)
         time.sleep(1.0)
 
         #em.set_mood(mood2)
+        #cambia_colore_luci(ROSSO) # Luce rossa: colpo di scena del Duca Pedemonte
         head(nao, 0.0, -0.05, 0.3)
         indicate_jury(nao, 0.6)
         #nao.say("Era... il Duca Pedemonte.")
@@ -170,6 +209,13 @@ def fase2(mood1, mood2):
         time.sleep(3)
         #em.set_mood(mood1)
         #nao.motion.moveTo(-0.05, 0.0, 0.0)
+        # Gesto con palmi verso l'alto (aperti)
+        nao.motion.angleInterpolation(
+            ["LShoulderRoll", "RShoulderRoll", "LElbowRoll", "RElbowRoll"],
+            [0.4, -0.4, -0.5, 0.5],
+            [1.0, 1.0, 1.0, 1.0],
+            True
+        )
         #nao.say("Maestà... era buio... e poi... i giudici si assomigliano tutti...")
         em.perform(AUDIO_FILES["maesta era buio"], mood=mood1)
 
@@ -177,7 +223,9 @@ def fase2(mood1, mood2):
 
         time.sleep(8)
         # INSERISCI BLOCCO 1
+        #cambia_colore_luci(BLU) # Luce blu: tristezza per l'errore commesso
         #esegui_blocco1(mood2)
+        head(nao, 0.0, 0.4, 1.5) # Testa molto bassa
         em.perform(AUDIO_FILES["si ho sbagliato"], mood=mood2)
 
         # OBERON: Basta esitazioni. Serve una soluzione... subito.
@@ -189,17 +237,21 @@ def fase2(mood1, mood2):
         # OBERON: Vai, Puck. E questa volta... non sbagliare bersaglio.
         #time.sleep(5.5)     #temp della battuta
         #em.set_mood(mood2)
-        final_pose(nao, 1.0)
+        #cambia_colore_luci(CIANO) # Luce ciano: nuova determinazione
+        final_pose(nao, 0.8)
         #nao.say("Stavolta no, mio re. Guarderò meglio. Agirò meglio.")
         em.perform(AUDIO_FILES["posso rimediare"], mood=mood2)
 
         time.sleep(0.5)
-        head(nao, 0.0, -0.05, 0.6)
+        #cambia_colore_luci(BIANCO) # Luce bianca: conclusione della scena
+        head(nao, 0.3, -0.1, 0.6) # Sguardo complice al pubblico
         #nao.say("...forse.")
         em.perform(AUDIO_FILES["forse"], mood=mood2)
         
         # (Blackout)
-        nao.posture.goToPosture("Sit", 1.0)
+        time.sleep(1.0)
+        #spegni_luci() # Spegnimento luci finale
+        nao.posture.goToPosture("Sit", 1.5)
         nao.motion.rest()
 
     except Exception as e:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #PATH_FOR_AUDIO = "/home/nao/audio/"
-PATH_FOR_AUDIO = "/home/ciccio/nao/EMOZIONI SECONDA PARTE/"
+PATH_FOR_AUDIO = "/home/nao/audio/"
 AUDIO_FILES = {
     #inizio
     "urlo": PATH_FOR_AUDIO + "urlo.wav",
@@ -15,6 +15,7 @@ AUDIO_FILES = {
     'poverina': PATH_FOR_AUDIO + "poverina non si azzarda.wav",
     'sui tuoi occhi': PATH_FOR_AUDIO + "sui tuoi occhi.wav",
     'ma allora': PATH_FOR_AUDIO + "ma allora sarò lontano.wav",
+    'ad oberon faccio ritorno' :  PATH_FOR_AUDIO + "perchè ad oberon faccio ritorno.wav",
 
     #seconda parte
     "nei pressi": PATH_FOR_AUDIO + "nei pressi.wav",

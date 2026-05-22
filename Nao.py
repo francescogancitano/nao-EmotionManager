@@ -88,6 +88,35 @@ class Nao(object):
             self.motion.setAngles("HeadPitch", pitch_angle, DEFAULT_MOTION_SPEED)
 
 
+    def rotate_deg(self, degrees, is_async=False):
+        """
+        Fa ruotare Nao su se stesso usando i gradi.
+        degrees: positivi = sinistra, negativi = destra.
+        """
+        import math
+        radians = math.radians(degrees)
+        logger.info("rotazione -> {} gradi ({} rad)".format(degrees, radians))
+        if self.motion:
+            if is_async:
+                self.motion.moveTo(0.0, 0.0, radians, _async=True)
+            else:
+                self.motion.moveTo(0.0, 0.0, radians)
+
+
+    def prepare_for_walk(self):
+        """Ottimizza i parametri del robot per una camminata più stabile."""
+        if self.motion:
+            logger.info("ottimizzazione parametri camminata...")
+            # Rigidità massima alle gambe per evitare cedimenti
+            self.motion.setStiffnesses("Legs", 0.8)
+            # Abilita il bilanciamento automatico delle braccia durante il passo
+            self.motion.setMoveArmsEnabled(True, True)
+            # Parametri di camminata più 'morbidi' (altezza passo ridotta per stabilità)
+            self.motion.setWalkArmsEnabled(True, True)
+        else:
+            logger.warning("motion non disponibile: impossibile preparare la camminata")
+
+
     def play_audio(self, audio_file):
         """
         riproduce un file audio.
