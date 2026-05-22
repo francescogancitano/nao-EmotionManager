@@ -13,6 +13,8 @@ from utils.utils_positions import (
 from utils.audio import AUDIO_FILES
 from faro import *
 
+from utils.lock import *
+
 
 
 """
@@ -94,7 +96,7 @@ def esegui_blocco2(mood):
     testi = {
         "felice": "Posso rimediare! Non è finita!",
         "determinato": "Rimedierò. Non fallirò di nuovo.",
-        "sorpresa": "Aspetta! E se esistesse un modo?",
+        "sorpresa": "#aspetta! E se esistesse un modo?",
         "paura": "Devo agire subito!",
         "triste": "Forse... non sono fatto per questo...",
         "arrabbiato": "Non è giusto! Io eseguo gli ordini!",
@@ -136,14 +138,15 @@ def fase2(mood1, mood2):
         time.sleep(0.5)
 
         # Entra e si ferma davanti a Oberon
-        #nao.motion.moveTo(0.15, 0.0, 0.0)
+        nao.motion.moveTo(0.15, 0.0, 0.0)
         time.sleep(0.8)
 
         # Inchino leggero
         head(nao, 0.0, 0.22, 0.8)
         time.sleep(0.4)
         head(nao, 0.0, 0.0, 0.6)
-        time.sleep(6)
+        
+        posso_parlare()
 
         # **NAO PUCK**
         #em.set_mood(mood1)
@@ -161,9 +164,15 @@ def fase2(mood1, mood2):
 
         #em.set_mood(mood2)
         indicate_jury(nao, 0.8)
+
+        #aspetta()
+
+        
         #nao.say("Uno di questi uscì... per parlare con la regina.")
         em.perform(AUDIO_FILES["uno di questi usci"], mood=mood2)
         time.sleep(0.5)
+
+        #aspetta()
         
         #nao.say("E allora io"
         
@@ -177,6 +186,10 @@ def fase2(mood1, mood2):
 
         #em.set_mood(mood1)
         open_arms_small(nao, 1.0)
+
+        #aspetta()
+
+
         #nao.say("La regina si destò... e di lui subito s’innamorò!")
         em.perform(AUDIO_FILES["la regina si desto"], mood=mood1)
         # OBERON: La cosa è riuscita meglio di quanto pensassi!
@@ -186,17 +199,24 @@ def fase2(mood1, mood2):
         #cambia_colore_luci(BLU) # Luce blu: Puck introduce il problema con esitazione
         head(nao, 0.0, 0.25, 1.0)
         arms_sad(nao, 1.2)
+
+        #aspetta()
+
+        posso_parlare()
+
+
         #nao.say("Sì, mio re... ma... c’è stato un leggerissimo problema...")
         em.perform(AUDIO_FILES["si mio re ma"], mood=mood2)
         # OBERON: Ovvero?
 
-        time.sleep(1.5)
+        posso_parlare()
         #em.set_mood(mood1)
         head(nao, 0.2, 0.35, 1.5)
 
-        #nao.say("Guardai il volto della regina... e mai sfortuna fu così inaspettata...")
+        #nao.say("Guardai il volto della regina... e mai sfortuna fu così in#aspettata...")
         em.perform(AUDIO_FILES["e mai sfortuna"], mood=mood1)
         time.sleep(1.0)
+
 
         #em.set_mood(mood2)
         #cambia_colore_luci(ROSSO) # Luce rossa: colpo di scena del Duca Pedemonte
@@ -205,10 +225,15 @@ def fase2(mood1, mood2):
         #nao.say("Era... il Duca Pedemonte.")
         em.perform(AUDIO_FILES["era il duca"], mood=mood2)
         
+        #aspetta()
+
+        posso_parlare()
+
         # OBERON: Puck! Sei l’assistente più inutile!
-        time.sleep(3)
+
         #em.set_mood(mood1)
-        #nao.motion.moveTo(-0.05, 0.0, 0.0)
+        nao.prepare_for_walk()
+        nao.motion.moveTo(-0.05, 0.0, 0.0)
         # Gesto con palmi verso l'alto (aperti)
         nao.motion.angleInterpolation(
             ["LShoulderRoll", "RShoulderRoll", "LElbowRoll", "RElbowRoll"],
@@ -219,18 +244,25 @@ def fase2(mood1, mood2):
         #nao.say("Maestà... era buio... e poi... i giudici si assomigliano tutti...")
         em.perform(AUDIO_FILES["maesta era buio"], mood=mood1)
 
-        # OBERON: Ora la mia regina si è innamorata di un idiota! (pausa) No... si può ancora sistemare.
+        #aspetta()
 
-        time.sleep(8)
+        posso_parlare()
+
+        # OBERON: Ora la mia regina si è innamorata di un idiota! (pausa) No... si può ancora sistemare.
+        
         # INSERISCI BLOCCO 1
         #cambia_colore_luci(BLU) # Luce blu: tristezza per l'errore commesso
         #esegui_blocco1(mood2)
         head(nao, 0.0, 0.4, 1.5) # Testa molto bassa
         em.perform(AUDIO_FILES["si ho sbagliato"], mood=mood2)
 
+        posso_parlare()
+
         # OBERON: Basta esitazioni. Serve una soluzione... subito.
-        time.sleep(5.5)
+        #time.sleep(5.5)
         # INSERISCI BLOCCO 2
+
+        posso_parlare()
         #em.perform(AUDIO_FILES[""])
 
         # FINALE
@@ -241,6 +273,8 @@ def fase2(mood1, mood2):
         final_pose(nao, 0.8)
         #nao.say("Stavolta no, mio re. Guarderò meglio. Agirò meglio.")
         em.perform(AUDIO_FILES["posso rimediare"], mood=mood2)
+
+        #aspetta()
 
         time.sleep(0.5)
         #cambia_colore_luci(BIANCO) # Luce bianca: conclusione della scena
