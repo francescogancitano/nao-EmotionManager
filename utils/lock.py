@@ -30,6 +30,7 @@ def aspetta():
         tty.setraw(fd)
         # Legge esattamente 1 byte (un carattere)
         sys.stdin.read(1)
+        
     finally:
         # Ripristina sempre le impostazioni originali del terminale
         termios.tcsetattr(fd, termios.TCSADRAIN, vecchie_impostazioni)

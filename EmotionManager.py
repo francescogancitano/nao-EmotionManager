@@ -10,6 +10,7 @@ from utils.log import logger
 from utils.utils import determine_file_type
 from utils.emotions import MOOD_CONFIG, NEUTRAL_CONFIG
 
+
 class EmotionManager(object):
 
     def __init__(self):
@@ -79,8 +80,3 @@ class EmotionManager(object):
             else:
                 self.nao.say(part)
 
-
-if __name__ == "__main__":
-    manager = EmotionManager()
-
-    manager.perform("cetttu", mood="sad")

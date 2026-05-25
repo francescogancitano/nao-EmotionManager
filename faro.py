@@ -116,21 +116,4 @@ def spegni_luci():
 def spegni_fumo():
     turn_on("fumo")
     turn_on("fumo")
-
-if "__main__" == __name__:
-
-    #COLORE = 0xffff00
-    #set_color("striscia", COLORE)
-    #set_color("ring", COLORE)
-    spegni_luci
-
-    accendi_luci()
-
-    cambia_colore_luci(0x00ff00)
-    set_color("faro", (255, 0, 0))
-
-    sleep(5)
-
-    spegni_luci()
-    
     

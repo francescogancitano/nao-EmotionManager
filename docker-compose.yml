@@ -9,3 +9,4 @@ services:
       - PYTHONUNBUFFERED=1
     # Se il robot è nella tua stessa rete, usa 'network_mode: host'
     network_mode: "host"
+    

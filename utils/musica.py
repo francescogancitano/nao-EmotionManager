@@ -15,14 +15,4 @@ def musica(fase):
 def stop_musica():
     requests.get(URL+"stop=1")
 
-if __name__ == "__main__":
-    musica(1)
-
-    sleep(10)
-
-    musica(2)
-
-    sleep(10)
-
-    stop_musica()
 

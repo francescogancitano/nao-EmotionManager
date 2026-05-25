@@ -17,3 +17,4 @@ for _keys, _config in _MOOD_DEFAULTS.items():
         MOOD_CONFIG[_key] = _config
 
 NEUTRAL_CONFIG = MOOD_CONFIG["neutro"]
+

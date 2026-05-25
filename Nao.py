@@ -127,3 +127,5 @@ class Nao(object):
             self.audio_player.playFile(audio_file)
         else:
             logger.warning("audio non disponibile in modalita' virtuale")
+
+            

@@ -91,3 +91,4 @@ def final_pose(nao, duration):
         [duration, duration, duration, duration, duration, duration],
         True
     )
+    

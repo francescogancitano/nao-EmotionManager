@@ -205,7 +205,6 @@ if __name__ == "__main__":
     
     fase2("felice", "triste")
 
-
     time.sleep(5)
 
     stop_musica()

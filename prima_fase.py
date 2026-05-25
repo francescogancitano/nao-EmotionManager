@@ -15,57 +15,10 @@ VERDE    = 0x00FF00
 VIOLETTO = 0xC58EE8
 ROSSO    = 0x80190E
 
-
-
 # Inizializzazione EmotionManager (default localhost)
 em = EmotionManager()
 nao = em.nao
 
-
-"""
-PROBLEMI:
-
-PROVA TECNICA:
-DEVE ALZARE IL BRACCIO E SPOSTARLO A SINISTRA
-
-PRIMA PARTE:
-FARLO ANDARE AVANTI DI POCO NELLA CAMMINATA DOPO L'URLO (MAX 20CM)
-
-UN ONDEGGIAMENTO IN MENO DI BRACCIA QUANDO DICE "ANCORA NON AVETE FATTO NIENTE"
-
-MENO SLEEP MENTRE DOPO CHE DICE NOTTE E PACE
-
-QUANDO DICE "MA CHI È LA" DEVE ALZARE DI MENO IL BRACCIO E PIÙ LENTAMENTE
-
-MENTRE CHE DICE MA CHI È LA PARTE L'AUDIO DI DOPO, METTERE UNO SLEEP O QUALCOSA
-
-DOPO CHE VERSA IL SUCCO ARCANO AGGIUSTARE LA PARTE DOVE SI GIRA
-
-
-
-"""
-
-
-"""
-parti di suddivisione:
-
-PROVA TECNICA:
-
-
-si alza e va avanti
-
-prende il microfono
-
-si gira di 180 gradi e va avanti
-
-si gira di 90 gradi e sta fermo per x secondi
-
-
-
-PRIMA PARTE:
-continua a suddividere seguendo la stessa logica
-
-"""
 
 def inizializzazione_robot():
     try:
@@ -505,8 +458,9 @@ def fase_completa():
 
 
 if __name__ == "__main__":
-    #fase_completa()
-    #musica(1)
+    prova_tecnica()
+    
+    musica(1)
 
     time.sleep(5)
 

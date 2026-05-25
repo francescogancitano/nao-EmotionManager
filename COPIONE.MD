@@ -191,5 +191,3 @@ TRISTEZZA PROFONDA
 
 _set_triste_
 Forse... non sono fatto per questo...
-
-

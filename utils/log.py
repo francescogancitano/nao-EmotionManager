@@ -13,6 +13,7 @@ _handler.setFormatter(colorlog.ColoredFormatter(
     }
 ))
 
+
 logger = colorlog.getLogger(__name__)
 logger.addHandler(_handler)
 logger.setLevel(logging.DEBUG)

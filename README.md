@@ -376,3 +376,5 @@ Comunque continuo a sorridere.
 - Il `# -*- coding: utf-8 -*-` in cima al file è necessario per i caratteri italiani
 - I file di testo con accenti devono essere aperti con `io.open(..., encoding="utf-8")`
 - Su robot virtuale, solo ALTextToSpeech funziona; ALLeds, ALMotion e ALAudioPlayer sono disabilitati
+
+

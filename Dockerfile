@@ -25,3 +25,5 @@ RUN if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
 # Usa il nome esatto del tuo file (occhio alle maiuscole!)
 CMD ["python", "EmotionManager.py"]
+
+

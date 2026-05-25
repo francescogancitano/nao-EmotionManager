@@ -34,7 +34,5 @@ AUDIO_FILES = {
     "stavolta no mio re": PATH_FOR_AUDIO + "stavolta no mio re.wav",
     "guardero meglio agiro meglio": PATH_FOR_AUDIO + "guarderò meglio agirò meglio.wav",
     "forse": PATH_FOR_AUDIO + "forse.wav",
-
-
-    
+  
 }
