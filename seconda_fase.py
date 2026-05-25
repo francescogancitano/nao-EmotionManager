@@ -15,22 +15,7 @@ from faro import *
 
 from utils.lock import *
 
-
-
-"""
-PROBLEMI: 
-
-
-
-"""
-
-
-
-
-
-
-
-
+from utils.musica import *
 
 # Definizioni colori per la scena
 VERDE    = 0x00FF00  # Bosco / Natura
@@ -44,247 +29,168 @@ BIANCO   = 0xFFFFFF  # Neutro / Inizio
 em = EmotionManager()
 nao = em.nao
 
-def esegui_blocco1(mood):
-    """
-    BLOCCO 1: Gestione emozioni dinamiche
-    Testi da COPIONE.MD: Tristezza, Rabbia, Paura, Disgusto, Noia
-    """
-    testi = {
-        "triste": "È colpa mia... ho rovinato tutto...",
-        "arrabbiato": "Non è giusto! Io eseguo gli ordini!",
-        "paura": "Siamo perduti... non posso rimediare...",
-        "disgusto": "Che errore terribile... è insopportabile...",
-        "noia": "Sì... ho sbagliato... che novità...",
-        "felice": "È un success! Tutto sta andando a meraviglia!",
-        "sorpresa": "Cosa? Com'è possibile tutto questo?",
-        "determinato": "Riuscirò nella mia missione, costi quel che costi!",
-        "neutro": "Sì, mio signore. Procederò come richiesto."
-    }
-    
-    m = mood.lower().strip()
-    if m in testi:
-        # Applica posizione specifica
-        if m == "triste":
-            arms_sad(nao, 1.0)
-            head(nao, 0.0, 0.30, 1.0)
-        elif m == "arrabbiato":
-            # Gesto secco
-            nao.motion.angleInterpolation(
-                ["LShoulderPitch", "RShoulderPitch"], [1.1, 1.1], [0.6, 0.6], True
-            )
-            head(nao, 0.0, 0.0, 0.6)
-        elif m == "paura":
-            head(nao, 0.2, 0.05, 0.4)
-            time.sleep(0.2)
-            head(nao, -0.2, 0.05, 0.4)
-        elif m == "disgusto":
-            head(nao, 0.35, 0.15, 0.8)
-        elif m == "noia":
-            head(nao, 0.0, 0.25, 1.5)
-            
-        #em.set_mood(m)
-        #nao.say(testi[m])
-        time.sleep(1.0)
-    else:
-        print("Mood '{}' non riconosciuto per Blocco 1".format(mood))
-
-def esegui_blocco2(mood):
-    """
-    BLOCCO 2: Gestione emozioni dinamiche
-    Testi da COPIONE.MD: Felicità, Determinazione, Sorpresa, Paura Attiva, Tristezza Profonda
-    """
-    testi = {
-        "felice": "Posso rimediare! Non è finita!",
-        "determinato": "Rimedierò. Non fallirò di nuovo.",
-        "sorpresa": "#aspetta! E se esistesse un modo?",
-        "paura": "Devo agire subito!",
-        "triste": "Forse... non sono fatto per questo...",
-        "arrabbiato": "Non è giusto! Io eseguo gli ordini!",
-        "disgusto": "È rivoltante... dobbiamo cambiare rotta.",
-        "noia": "Uff... un'altra incombenza noiosa...",
-        "neutro": "Sì, mio signore. Procederò come richiesto."
-    }
-    
-    m = mood.lower().strip()
-
-
-    if m in testi:
-        if m == "felice":
-            arms_open_happy(nao, 1.0)
-        elif m == "determinato":
-            final_pose(nao, 1.0)
-        elif m == "sorpresa":
-            head(nao, 0.0, -0.15, 0.5)
-        elif m == "paura":
-            head(nao, 0.1, 0.0, 0.2)
-            head(nao, -0.1, 0.0, 0.2)
-        elif m == "triste":
-            head(nao, 0.0, 0.45, 2.0)
-            
-        #em.set_mood(m)
-        #nao.say(testi[m])
-        time.sleep(1.0)
-    else:
-        print("Mood '{}' non riconosciuto per Blocco 2".format(mood))
-
 def fase2(mood1, mood2):
     try:
         # Inizializzazione
-        nao.posture.goToPosture("StandInit", 0.8)
-        nao.motion.setStiffnesses("Body", 1.0)
-        #cambia_colore_luci(BIANCO) # Luce bianca per iniziare la scena
+        #nao.posture.goToPosture("StandInit", 0.8)
+        #nao.motion.setStiffnesses("Body", 1.0)
+        set_color("faro", (255, 255, 255)) # Luce bianca
         time.sleep(0.5)
         close_arms(nao, 0.6)
         time.sleep(0.5)
 
-        # Entra e si ferma davanti a Oberon
-        nao.motion.moveTo(0.15, 0.0, 0.0)
-        time.sleep(0.8)
+        # Entra e si ferma davanti a Oberon (movimento minimo)
+        #nao.motion.moveTo(0.10, 0.0, 0.0)
+        time.sleep(0.5)
 
-        # Inchino leggero
-        head(nao, 0.0, 0.22, 0.8)
+        # Inchino rispettoso
+        head(nao, 0.0, 0.3, 0.8)
         time.sleep(0.4)
         head(nao, 0.0, 0.0, 0.6)
         
         posso_parlare()
 
-        # **NAO PUCK**
-        #em.set_mood(mood1)
-        #nao.say("Nei pressi del suo giaciglio... un branco di giudici di una gara s’era riunito a vedere un dramma...")
-        #cambia_colore_luci(VERDE) # Luce verde: Puck racconta del bosco
+        # --- RACCONTO DEL BOSCO ---
+        set_color("faro", (0, 255, 0)) # VERDE
+        
+        # "Nei pressi del suo giaciglio..."
         if nao.audio_player:
             nao.audio_player.playFile(AUDIO_FILES["nei pressi"], _async=True)
-            # Piccolo movimento descrittivo
-            arms_both(nao, 1.0, 0.3, 1.0, -0.3, 1.5)
+            # Gesto descrittivo con le braccia (apertura ampia)
+            arms_both(nao, 0.8, 0.6, 0.8, -0.6, 1.5)
             time.sleep(1.5)
-            arms_both(nao, 1.2, 0.1, 1.2, -0.1, 1.5)
+            arms_both(nao, 1.1, 0.2, 1.1, -0.2, 1.2)
         else:
             em.perform(AUDIO_FILES["nei pressi"], mood=mood1)
-        time.sleep(0.5)
-
-        #em.set_mood(mood2)
-        indicate_jury(nao, 0.8)
-
-        #aspetta()
-
         
-        #nao.say("Uno di questi uscì... per parlare con la regina.")
-        em.perform(AUDIO_FILES["uno di questi usci"], mood=mood2)
-        time.sleep(0.5)
+        time.sleep(1)
 
-        #aspetta()
+        # "Uno di questi uscì..."
+        indicate_jury(nao, 0.8) # Indica i giudici
+        em.perform(AUDIO_FILES["uno di questi"], mood=mood1)
+        time.sleep(0.1)
+
+        # "E allora io..." (Nuovo audio)
+        # Puck si pavoneggia un po'
+        nao.motion.angleInterpolation(["LShoulderRoll", "RShoulderRoll"], [0.3, -0.3], [0.8, 0.8], True)
+        em.perform(AUDIO_FILES["e allora io"], mood="felice")
         
-        #nao.say("E allora io"
+        # --- IL SUCCO ARCANO ---
+        set_color("faro", (197, 142, 232)) # VIOLETTO
         
-        #cambia_colore_luci(VIOLETTO) # Luce violetta: momento magico del succo
+        # Movimento di versamento
         pour_motion(nao, 1.2)
-        #nao.say("le versai nell’occhio il succo arcano!")
-        em.perform(AUDIO_FILES["le versai nell’occhio il succo arcano"], mood=mood2)
+        # "le versai nell'occhio..."
+        em.perform(AUDIO_FILES["le versai nell'occhio"], mood=mood1)
 
         close_right_hand(nao, 0.4)
-        time.sleep(0.2)
+        time.sleep(0.1)
 
-        #em.set_mood(mood1)
+        # Puck soddisfatto
         open_arms_small(nao, 1.0)
-
-        #aspetta()
-
-
-        #nao.say("La regina si destò... e di lui subito s’innamorò!")
-        em.perform(AUDIO_FILES["la regina si desto"], mood=mood1)
+        # "La regina si destò..."
+        em.perform(AUDIO_FILES["la regina si desto"], mood="felice")
+        
         # OBERON: La cosa è riuscita meglio di quanto pensassi!
         
-        time.sleep(3.4)       #TEMPO CHE OBERON DICE LA BATTUTA
-        #em.set_mood(mood2)
-        #cambia_colore_luci(BLU) # Luce blu: Puck introduce il problema con esitazione
+        
+        # --- IL PROBLEMA ---
+        set_color("faro", (0, 0, 255)) # BLU: Esitazione
+        
+        # Puck si rimpicciolisce
         head(nao, 0.0, 0.25, 1.0)
         arms_sad(nao, 1.2)
-
-        #aspetta()
-
         posso_parlare()
 
-
-        #nao.say("Sì, mio re... ma... c’è stato un leggerissimo problema...")
-        em.perform(AUDIO_FILES["si mio re ma"], mood=mood2)
+        # "Sì, mio re... ma..."
+        em.perform(AUDIO_FILES["si mio re ma"], mood="triste")
+        
         # OBERON: Ovvero?
-
         posso_parlare()
-        #em.set_mood(mood1)
+        
+        # Sguardo basso e braccia vicine
         head(nao, 0.2, 0.35, 1.5)
+        # "Guardai il volto della regina..."
+        em.perform(AUDIO_FILES["guardai il volto della regina"], mood="triste")
+        time.sleep(0.5)
 
-        #nao.say("Guardai il volto della regina... e mai sfortuna fu così in#aspettata...")
-        em.perform(AUDIO_FILES["e mai sfortuna"], mood=mood1)
-        time.sleep(1.0)
+        # "E mai sfortuna..."
+        em.perform(AUDIO_FILES["e mai sfortuna"], mood="triste")
+        time.sleep(0.5)
 
-
-        #em.set_mood(mood2)
-        #cambia_colore_luci(ROSSO) # Luce rossa: colpo di scena del Duca Pedemonte
+        # --- IL DUCA PEDEMONTE ---
+        set_color("faro", (255, 0, 0)) # ROSSO: Errore/Tensione
+        
+        # Scatto della testa verso il re, poi indica il "disastro"
         head(nao, 0.0, -0.05, 0.3)
         indicate_jury(nao, 0.6)
-        #nao.say("Era... il Duca Pedemonte.")
-        em.perform(AUDIO_FILES["era il duca"], mood=mood2)
+        # "Era... il Duca Pedemonte."
+        em.perform(AUDIO_FILES["era il duca"], mood="paura")
         
-        #aspetta()
-
         posso_parlare()
 
         # OBERON: Puck! Sei l’assistente più inutile!
 
-        #em.set_mood(mood1)
-        nao.prepare_for_walk()
-        nao.motion.moveTo(-0.05, 0.0, 0.0)
-        # Gesto con palmi verso l'alto (aperti)
+        # Puck si giustifica (Palmi aperti, movimento del busto/testa)
         nao.motion.angleInterpolation(
-            ["LShoulderRoll", "RShoulderRoll", "LElbowRoll", "RElbowRoll"],
-            [0.4, -0.4, -0.5, 0.5],
-            [1.0, 1.0, 1.0, 1.0],
+            ["LShoulderRoll", "RShoulderRoll", "LElbowRoll", "RElbowRoll", "HeadYaw"],
+            [0.5, -0.5, -0.6, 0.6, 0.2],
+            [1.0, 1.0, 1.0, 1.0, 1.0],
             True
         )
-        #nao.say("Maestà... era buio... e poi... i giudici si assomigliano tutti...")
-        em.perform(AUDIO_FILES["maesta era buio"], mood=mood1)
-
-        #aspetta()
+        # "Maestà... era buio..."
+        em.perform(AUDIO_FILES["maesta era buio"], mood="disgusto")
+        
+        # "e poi i giudici..."
+        head(nao, -0.2, 0.1, 0.8)
+        em.perform(AUDIO_FILES["e poi i giudici si assomigliano tutti"], mood="noia")
 
         posso_parlare()
 
-        # OBERON: Ora la mia regina si è innamorata di un idiota! (pausa) No... si può ancora sistemare.
+        # OBERON: Ora la mia regina si è innamorata di un idiota! No... si può ancora sistemare.
         
-        # INSERISCI BLOCCO 1
-        #cambia_colore_luci(BLU) # Luce blu: tristezza per l'errore commesso
-        #esegui_blocco1(mood2)
-        head(nao, 0.0, 0.4, 1.5) # Testa molto bassa
-        em.perform(AUDIO_FILES["si ho sbagliato"], mood=mood2)
+        # BLOCCO 1 (Tristezza/Riflessione)
+        head(nao, 0.0, 0.45, 1.5) # Testa molto bassa
+        arms_sad(nao, 1.0)
+        em.perform(AUDIO_FILES["blocco 1"], mood="triste")
 
         posso_parlare()
 
         # OBERON: Basta esitazioni. Serve una soluzione... subito.
-        #time.sleep(5.5)
-        # INSERISCI BLOCCO 2
+        
+        # BLOCCO 2 (Ripresa/Speranza)
+        head(nao, 0.0, -0.1, 1.0) # Alza lo sguardo
+        open_arms_small(nao, 1.2)
+        em.perform(AUDIO_FILES["blocco 2"], mood="determinato")
 
         posso_parlare()
-        #em.perform(AUDIO_FILES[""])
 
-        # FINALE
         # OBERON: Vai, Puck. E questa volta... non sbagliare bersaglio.
-        #time.sleep(5.5)     #temp della battuta
-        #em.set_mood(mood2)
-        #cambia_colore_luci(CIANO) # Luce ciano: nuova determinazione
+        
+        # --- FINALE DETERMINATO ---
+        set_color("faro", (0, 255, 255)) # CIANO: Determinazione
+        
         final_pose(nao, 0.8)
-        #nao.say("Stavolta no, mio re. Guarderò meglio. Agirò meglio.")
-        em.perform(AUDIO_FILES["posso rimediare"], mood=mood2)
-
-        #aspetta()
+        # "Stavolta no, mio re..."
+        em.perform(AUDIO_FILES["stavolta no mio re"], mood="determinato")
+        
+        # "Guarderò meglio..."
+        em.perform(AUDIO_FILES["guardero meglio agiro meglio"], mood="determinato")
 
         time.sleep(0.5)
-        #cambia_colore_luci(BIANCO) # Luce bianca: conclusione della scena
-        head(nao, 0.3, -0.1, 0.6) # Sguardo complice al pubblico
-        #nao.say("...forse.")
-        em.perform(AUDIO_FILES["forse"], mood=mood2)
+        
+        # CONCLUSIONE
+        set_color("faro", (255, 255, 255)) # BIANCO
+        
+        # Sguardo complice/furbo verso il pubblico
+        head(nao, 0.4, 0.1, 0.8) 
+        # "...forse."
+        em.perform(AUDIO_FILES["forse"], mood="felice")
         
         # (Blackout)
         time.sleep(1.0)
-        #spegni_luci() # Spegnimento luci finale
+        set_color("faro", (0, 0, 0)) # SPEGNIMENTO
+        
         nao.posture.goToPosture("Sit", 1.5)
         nao.motion.rest()
 
@@ -292,4 +198,14 @@ def fase2(mood1, mood2):
         print("Errore durante Fase 2: " + str(e))
 
 if __name__ == "__main__":
-    fase2("felice", "arrabbiato")
+
+    musica(2)
+
+    time.sleep(5)
+    
+    fase2("felice", "triste")
+
+
+    time.sleep(5)
+
+    stop_musica()

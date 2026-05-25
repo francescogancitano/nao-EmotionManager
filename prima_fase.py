@@ -8,6 +8,7 @@ from utils.utils_positions import head, arms_both, right_arm_magic_pose
 from faro import *
 from utils.audio import *
 from utils.lock import *
+from utils.musica import *
 
 
 VERDE    = 0x00FF00
@@ -100,7 +101,7 @@ def prova_tecnica():
     # MaxStepX ridotto per lentezza
     nao.motion.moveTo(0.45, 0.0, 0.0, [["MaxStepX", 0.01]])
 
-    aspetta()
+    #aspetta()
 
     # 3. Microfono: alza il braccio a circa 85 gradi (centrale, palmo aperto)
     # Pitch 0.08 rad è circa 85° dalla verticale giù
@@ -112,7 +113,7 @@ def prova_tecnica():
     )
     time.sleep(1.0)
 
-    aspetta()
+    #aspetta()
 
     # 4. Abbassa il braccio
     nao.motion.angleInterpolation(
@@ -122,19 +123,19 @@ def prova_tecnica():
         True
     )
 
-    aspetta()
+    #aspetta()
 
     # 5. Si gira lentamente di 180 gradi
     nao.prepare_for_walk()
     #nao.motion.moveTo(0.0, 0.0, 2.3, [["MaxStepTheta", 0.1]])
     nao.rotate_deg(180)
 
-    aspetta()
+    #aspetta()
 
     # 6. Va avanti di approssimativamente 30cm lentamente
     nao.motion.moveTo(0.10, 0.0, 0.0, [["MaxStepX", 0.01]])
 
-    aspetta()
+    #aspetta()
 
     #SI DEVE GIRARE DI 90°
     nao.prepare_for_walk()
@@ -194,6 +195,10 @@ def inizio_prima_parte():
     time.sleep(1)
     #cambia_colore_luci(VERDE)
     set_color("faro", (0, 255, 0))
+
+    musica(1)
+
+    time.sleep(4)
 
     # (NAO abbassa il braccio e si porta in posizione neutra. Sfondo: bosco)
     nao.posture.goToPosture("StandInit", 1.0)
@@ -426,31 +431,31 @@ def prima_fase():
     inizio_prima_parte()
     logger.info("fine prima parte")
 
-    aspetta()
+    #aspetta()
 
     logger.info("inizio monologo 'per il bosco'")
     per_il_bosco_ho_scorrazzato()
     logger.info("fine monologo 'per il bosco'")
 
-    aspetta()
+    #aspetta()
 
     logger.info("inizio monologo 'notte e pace'")
     notte_e_pace()
     logger.info("fine monologo 'notte e pace'")
 
-    aspetta()
+    #aspetta()
 
     logger.info("inizio monologo 'spaventato ma chi è la?'")
     ma_chi_e_la()
     logger.info("fine monologo 'spaventato ma chi è la?'")
 
-    aspetta()
+    #aspetta()
     
     logger.info("inizio versamento succo")
     succo_arcano()
     logger.info("fine versamento succo")
 
-    aspetta()
+    #aspetta()
 
     logger.info("inizio monologo ad oberon faccio ritorno")
     ad_oberon_faccio_ritorno()
@@ -464,7 +469,7 @@ def fase_completa():
         prova_tecnica()
         logger.info("fine prova tecnica")
 
-        aspetta()
+        #aspetta()
 
         logger.info("INIZIO PRIMA FASE")
         prima_fase()
@@ -500,6 +505,16 @@ def fase_completa():
 
 
 if __name__ == "__main__":
+    #fase_completa()
+    #musica(1)
+
+    time.sleep(5)
+
     fase_completa()
+
+    time.sleep(5)
+
+    stop_musica()
+    
 
     

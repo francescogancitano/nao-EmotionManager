@@ -19,10 +19,10 @@ AUDIO_FILES = {
 
     #seconda parte
     "nei pressi": PATH_FOR_AUDIO + "nei pressi del suo giaciglio.wav",
-    "uno di questi": PATH_FOR_AUDIO + "uno di questo usci.wav",
+    "uno di questi": PATH_FOR_AUDIO + "uno di questi usci.wav",
     "e allora io": PATH_FOR_AUDIO + "e allora io.wav",
     "le versai nell'occhio": PATH_FOR_AUDIO + "le versai nell'occhio.wav",
-    "la regina si desto": PATH_FOR_AUDIO + "la regina si destò",
+    "la regina si desto": PATH_FOR_AUDIO + "la regina si destò.wav",
     "si mio re ma": PATH_FOR_AUDIO + "si mio re ma.wav",
     "guardai il volto della regina": PATH_FOR_AUDIO + "guardai il volto della regina.wav",
     "e mai sfortuna": PATH_FOR_AUDIO + "e mai sfortuna fu così inaspettata.wav",
@@ -32,7 +32,7 @@ AUDIO_FILES = {
     "blocco 1" : PATH_FOR_AUDIO + "blocco 1.wav",
     "blocco 2" : PATH_FOR_AUDIO + "blocco 2.wav",
     "stavolta no mio re": PATH_FOR_AUDIO + "stavolta no mio re.wav",
-    "guardero meglio agiro meglio": PATH_FOR_AUDIO + "guardero meglio agiro meglio",
+    "guardero meglio agiro meglio": PATH_FOR_AUDIO + "guarderò meglio agirò meglio.wav",
     "forse": PATH_FOR_AUDIO + "forse.wav",
 
 
